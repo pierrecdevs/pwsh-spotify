@@ -40,7 +40,7 @@ function Open-AuthorizationUrl
 {
     Param(
         [string] $Scope,
-        [bool] $internalServer
+        [bool] $InternalServer
     )
 
     if (-not $global:spotifyClient)
@@ -49,7 +49,7 @@ function Open-AuthorizationUrl
         return
     }
 
-    $global:spotifyClient.OpenAuthorizationUrl($Scope, $internalServer)
+    $global:spotifyClient.OpenAuthorizationUrl($Scope, $InternalServer)
 }
 
 function Get-AccessToken
