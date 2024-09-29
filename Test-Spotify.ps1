@@ -23,7 +23,8 @@ $json = $page.Content | ConvertFrom-Json
 if ([string]::IsNullOrEmpty($json))
 {
     Write-Host "Nothing playing, or spotify not running."
-} else
+}
+else
 {
     Write-Host 'Current song'
     Write-Host $json
