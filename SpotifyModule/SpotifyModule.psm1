@@ -3,27 +3,32 @@ Import-Module -Force "$PSScriptRoot\SpotifyClient.psm1"
 
 $global:spotifyClient = $null
 
-function Initialize-SpotifyClient {
+function Initialize-SpotifyClient
+{
     Param(
         [string]$ClientId,
         [string]$ClientSecret,
         [string]$RedirectUri
     )
 
-    if (-not $global:spotifyClient) {
+    if (-not $global:spotifyClient)
+    {
         $global:spotifyClient = Get-SpotifyClient -ClientId $ClientId -ClientSecret $ClientSecret -RedirectUri $RedirectUri
         Write-Host "Spotify Client Initialized"
-    } else {
+    } else
+    {
         Write-Host "Spotify Client already initialized."
     }
 
 }
-function Invoke-WebServer {
+function Invoke-WebServer
+{
     Param(
         [string] $Path
     )
     
-    if (-not $global:spotifyClient) {
+    if (-not $global:spotifyClient)
+    {
         Write-Error "SpotifyClient not initialized. Please call Initialize-SpotifyClient first."
         return
     }
@@ -31,13 +36,15 @@ function Invoke-WebServer {
     return $global:spotifyClient.InvokeWebServer($path)
 }
 
-function Open-AuthorizationUrl {
+function Open-AuthorizationUrl
+{
     Param(
         [string] $Scope,
         [bool] $internalServer
     )
 
-    if (-not $global:spotifyClient) {
+    if (-not $global:spotifyClient)
+    {
         Write-Error "SpotifyClient not initialized. Please call Initialize-SpotifyClient first."
         return
     }
@@ -45,23 +52,27 @@ function Open-AuthorizationUrl {
     $global:spotifyClient.OpenAuthorizationUrl($Scope, $internalServer)
 }
 
-function Get-AccessToken {
+function Get-AccessToken
+{
     Param(
         [string] $Code
     )
 
-    if (-not $global:spotifyClient) {
+    if (-not $global:spotifyClient)
+    {
         Write-Error "SpotifyClient not initialized. Please call Initialize-SpotifyClient first."
         return
     }
 
     $spotifyClient.GetAccessToken($Code)
-    return $spotifyClient.AccessToken
+    return $spotifyClient.RefreshToken
 }
 
-function Get-RefreshToken {
+function Get-RefreshToken
+{
 
-    if (-not $global:spotifyClient) {
+    if (-not $global:spotifyClient)
+    {
         Write-Error "SpotifyClient not initialized. Please call Initialize-SpotifyClient first."
         return
     }
@@ -70,8 +81,10 @@ function Get-RefreshToken {
     return $spotifyClient.AccessToken
 }
 
-function Get-CurrentSong {
-    if (-not $global:spotifyClient) {
+function Get-CurrentSong
+{
+    if (-not $global:spotifyClient)
+    {
         Write-Error "SpotifyClient not initialized. Please call Initialize-SpotifyClient first."
         return
     }
