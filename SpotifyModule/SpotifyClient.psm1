@@ -7,7 +7,6 @@ Class SpotifyClient
     [string] $AccessToken
     [string] $RefreshToken
 
-    # Constructor
     SpotifyClient ([string]$ClientId, [string]$ClientSecret, [string]$RedirectUri)
     {
         $this.ClientId = $ClientId
@@ -48,7 +47,7 @@ Class SpotifyClient
     }
 
     # Method to get an access token using the authorization code
-    [void] GetAccessToken ([string]$Code)
+    [pscustomobject] GetAccessToken ([string]$Code)
     {
         $ClientBytes = [System.Text.Encoding]::UTF8.GetBytes("$($this.ClientId):$($this.ClientSecret)")
         $EncodedClientInfo = [Convert]::ToBase64String($ClientBytes)
@@ -71,10 +70,11 @@ Class SpotifyClient
 
         $this.AccessToken = $json.access_token
         $this.RefreshToken = $json.refresh_token
+        return $json
     }
 
     # Method to refresh the access token using the refresh token
-    [void] GetRefreshToken ()
+    [pscustomobject] GetRefreshToken ()
     {
         $ClientBytes = [System.Text.Encoding]::UTF8.GetBytes("$($this.ClientId):$($this.ClientSecret)")
         $EncodedClientInfo = [Convert]::ToBase64String($ClientBytes)
@@ -96,6 +96,7 @@ Class SpotifyClient
         $json = $response.Content | ConvertFrom-Json
 
         $this.AccessToken = $json.access_token
+        return $json
     }
 
     # Method to get the current song playing on Spotify
@@ -113,6 +114,26 @@ Class SpotifyClient
     }
 }
 
+<#
+.SYNOPSIS
+Instatiates a new SpotifyClient class
+
+.DESCRIPTION
+This exposes the class for use with other modules
+
+.PARAMETER ClientId
+ClientId of your application you created
+
+.PARAMETER ClientSecret
+ClientSecret of your application you created
+
+.PARAMETER RedirectUri
+RedirectUrl you registered with your app
+
+.EXAMPLE
+$spotifyClient = Get-SpotifyClient -ClientId 'fakeidhere' -ClientSecret 'fakesecrethere' -RedirectUri 'http://localhost/callback/'
+
+#>
 function Get-SpotifyClient([string]$ClientId, [string]$ClientSecret, [string]$RedirectUri) {
     return [SpotifyClient]::new($ClientId, $ClientSecret, $RedirectUri)
 }
